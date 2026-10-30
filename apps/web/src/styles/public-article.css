@@ -1,0 +1,516 @@
+@layer components {
+  .public-article {
+    --public-article-scroll-offset: 24px;
+  }
+
+  .public-article--retypeset {
+    --public-article-scroll-offset: 48px;
+    --background: var(--retypeset-background);
+    --foreground: var(--retypeset-primary);
+    --card: color-mix(in oklab, var(--retypeset-surface-tint) 6%, transparent);
+    --card-foreground: var(--retypeset-primary);
+    --primary: var(--retypeset-accent);
+    --primary-foreground: var(--retypeset-background);
+    --muted: color-mix(in oklab, var(--retypeset-surface-tint) 10%, transparent);
+    --muted-foreground: color-mix(in oklab, var(--retypeset-secondary) 80%, transparent);
+    --accent: color-mix(in oklab, var(--retypeset-surface-tint) 12%, transparent);
+    --accent-foreground: var(--retypeset-primary);
+    --border: color-mix(in oklab, var(--retypeset-secondary) 22%, transparent);
+    --ring: color-mix(in oklab, var(--retypeset-accent) 60%, transparent);
+    color: var(--retypeset-secondary);
+  }
+
+  /* ── Header: title + date, no border ── */
+
+  .public-article .post-header {
+    @apply mb-12;
+  }
+
+  .public-article .post-title {
+    @apply mb-2 mt-0 text-balance text-3xl font-bold leading-[1.33] tracking-tight md:text-4xl;
+  }
+
+  .public-article .post-repost-source {
+    @apply mb-3 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm leading-6;
+    color: color-mix(in oklab, var(--retypeset-secondary) 75%, transparent);
+    font-family: var(--font-luo);
+    letter-spacing: 0;
+  }
+
+  .public-article .post-repost-label {
+    @apply inline-flex shrink-0 items-center rounded-[2px] border px-1.5 py-0.5 font-mono text-[0.62rem] font-semibold leading-none;
+    border-color: color-mix(in oklab, var(--retypeset-secondary) 35%, transparent);
+    color: var(--retypeset-accent);
+    letter-spacing: 0;
+  }
+
+  .public-article .post-repost-author {
+    @apply min-w-0 break-words;
+  }
+
+  .public-article .post-repost-author::after {
+    @apply ml-2;
+    color: color-mix(in oklab, var(--retypeset-secondary) 40%, transparent);
+    content: "·";
+  }
+
+  .public-article .post-repost-author strong {
+    @apply font-medium;
+    color: var(--retypeset-primary);
+  }
+
+  .public-article .post-repost-link {
+    @apply rounded-sm font-medium underline underline-offset-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    color: var(--retypeset-accent);
+    text-decoration-color: color-mix(in oklab, var(--retypeset-accent) 45%, transparent);
+  }
+
+  .public-article .post-repost-link:hover {
+    color: var(--retypeset-primary);
+    text-decoration-color: color-mix(in oklab, var(--retypeset-primary) 70%, transparent);
+  }
+
+  .public-article--retypeset .post-repost-link {
+    --tw-ring-color: color-mix(in oklab, var(--retypeset-accent) 60%, transparent);
+    --tw-ring-offset-color: var(--retypeset-background);
+  }
+
+  .public-article--retypeset .post-title {
+    color: var(--retypeset-primary);
+    letter-spacing: 0;
+  }
+
+  .public-article .post-date {
+    @apply mt-3 block text-sm;
+    color: color-mix(in oklab, var(--retypeset-secondary) 80%, transparent);
+    font-family: var(--font-luo);
+    letter-spacing: 0.01em;
+  }
+
+  .public-article--retypeset .post-date {
+    color: color-mix(in oklab, var(--retypeset-secondary) 70%, transparent);
+    letter-spacing: 0;
+  }
+
+  .public-article.public-article--retypeset .post-date-updated {
+    color: color-mix(in oklab, var(--retypeset-secondary) 55%, transparent);
+  }
+
+  .public-article .post-date time {
+    @apply inline;
+  }
+
+  .public-article .post-date-sep {
+    @apply mx-1.5 text-muted-foreground/50;
+  }
+
+  .public-article .post-date-updated {
+    @apply text-muted-foreground/70;
+    font-family: var(--font-luo);
+  }
+
+  .public-article .post-ai-summary {
+    @apply mb-8 rounded-md border px-4 py-3 shadow-sm backdrop-blur-sm;
+    border-color: color-mix(in oklab, var(--retypeset-secondary) 22%, transparent);
+    background-color: color-mix(in oklab, var(--retypeset-surface-tint) 8%, transparent);
+    color: var(--retypeset-primary);
+  }
+
+  .public-article .post-ai-summary-label {
+    @apply mb-2 text-xs font-medium;
+    color: var(--retypeset-accent);
+    letter-spacing: 0;
+  }
+
+  .public-article .post-ai-summary-text {
+    @apply m-0 break-words text-[0.9375rem] leading-7;
+    color: var(--retypeset-secondary);
+  }
+
+  .public-article .post-ai-summary-text :where(p) {
+    @apply m-0;
+    text-indent: 2em;
+  }
+
+  .public-article .post-ai-summary-text :where(p + p) {
+    @apply mt-2;
+  }
+
+  .public-article .post-ai-summary-text :where(a) {
+    color: var(--retypeset-accent);
+  }
+
+  /* ── Tags footer: below content ── */
+
+  .public-article .post-tags-footer {
+    @apply mt-14;
+  }
+
+  .public-article .post-tags-line {
+    @apply mb-5 h-px w-16 bg-border/60;
+  }
+
+  .public-article--retypeset .post-tags-line {
+    background-color: color-mix(in oklab, var(--retypeset-secondary) 28%, transparent);
+  }
+
+  .public-article .post-tags {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .public-article .post-tag {
+    @apply rounded-full px-3 py-0.5 text-xs transition-colors hover:border-primary/40 hover:text-primary;
+  }
+
+  .public-article--retypeset .post-tag {
+    @apply rounded-full border px-3 py-0.5 text-xs transition-colors;
+    border-color: color-mix(in oklab, var(--retypeset-secondary) 25%, transparent);
+    background-color: color-mix(in oklab, var(--retypeset-surface-tint) 8%, transparent);
+    color: color-mix(in oklab, var(--retypeset-secondary) 90%, transparent);
+  }
+
+  .public-article--retypeset .post-tag:hover {
+    border-color: color-mix(in oklab, var(--retypeset-accent) 65%, transparent);
+    color: var(--retypeset-accent);
+  }
+
+  /* ── 正文图片：可点击放大（!important 压过 ImageElement 上的 cursor-pointer 工具类） ── */
+
+  .public-article .plate-article-content figure img {
+    cursor: zoom-in !important;
+  }
+
+  /* ── Prev / Next navigation ── */
+
+  .public-article .post-nav {
+    @apply mt-10 grid grid-cols-1 gap-x-8 gap-y-5 border-t pt-6 sm:grid-cols-2;
+    border-color: color-mix(in oklab, var(--retypeset-secondary) 18%, transparent);
+  }
+
+  .public-article .post-nav-link {
+    @apply flex min-w-0 flex-col gap-1 rounded-sm;
+  }
+
+  .public-article .post-nav-link--next {
+    @apply sm:items-end sm:text-right;
+  }
+
+  .public-article .post-nav-label {
+    @apply text-xs;
+    color: color-mix(in oklab, var(--retypeset-secondary) 65%, transparent);
+    font-family: var(--font-luo);
+  }
+
+  .public-article .post-nav-title {
+    @apply break-words text-[0.95rem] font-medium leading-6 transition-colors;
+    color: var(--retypeset-primary);
+  }
+
+  .public-article .post-nav-link:hover .post-nav-title {
+    color: var(--retypeset-accent);
+  }
+
+  .public-article .post-nav-date {
+    @apply text-xs;
+    color: color-mix(in oklab, var(--retypeset-secondary) 55%, transparent);
+    font-family: var(--font-luo);
+  }
+
+  /* ── Comments (giscus) ── */
+
+  .public-article .post-comments {
+    @apply mt-12;
+  }
+
+  .public-article .post-comments-line {
+    @apply mb-8 h-px w-16;
+    background-color: color-mix(in oklab, var(--retypeset-secondary) 28%, transparent);
+  }
+
+  /* ── Skeleton loading bars ── */
+
+  .public-article .skeleton-bar {
+    @apply rounded-lg bg-muted/60;
+    animation: skeleton-pulse 1.8s ease-in-out infinite;
+  }
+
+  .public-article--retypeset .skeleton-bar {
+    background-color: color-mix(in oklab, var(--retypeset-secondary) 18%, transparent);
+  }
+
+  .public-article--retypeset .plate-article {
+    color: var(--retypeset-secondary);
+  }
+
+  .public-article--retypeset .plate-article-content {
+    @apply text-[1rem] leading-8 md:text-[1.035rem] md:leading-9;
+  }
+
+  .public-article--retypeset .plate-article-content :where(h1, h2, h3, h4, h5, h6) {
+    color: var(--retypeset-primary);
+    letter-spacing: 0;
+  }
+
+  /* h1/h2：用主题 highlight 在标题文字下铺一道荧光笔（retypeset 招牌效果） */
+  .public-article--retypeset .plate-article-content :where(h1, h2) {
+    position: relative;
+    display: inline-block;
+    z-index: 0;
+    color: var(--retypeset-primary);
+  }
+
+  .public-article--retypeset .plate-article-content :where(h1, h2)::after {
+    content: "";
+    position: absolute;
+    left: -0.05em;
+    right: -0.05em;
+    bottom: 0.05em;
+    height: 0.42em;
+    background-color: var(--retypeset-highlight);
+    z-index: -1;
+    border-radius: 1px;
+  }
+
+  .public-article--retypeset .plate-article-content :where(p) {
+    color: var(--retypeset-secondary);
+  }
+
+  .public-article--retypeset .plate-article-content :where(a) {
+    color: var(--retypeset-accent);
+    text-decoration-color: color-mix(in oklab, var(--retypeset-accent) 55%, transparent);
+  }
+
+  .public-article--retypeset .plate-article-content :where(a):hover {
+    color: var(--retypeset-primary);
+    text-decoration-color: color-mix(in oklab, var(--retypeset-primary) 70%, transparent);
+  }
+
+  .public-article--retypeset .plate-article-content :where(blockquote) {
+    border-color: color-mix(in oklab, var(--retypeset-accent) 60%, transparent);
+    color: color-mix(in oklab, var(--retypeset-secondary) 85%, transparent);
+  }
+
+  .public-article--retypeset .plate-article-content :where(code) {
+    border-color: color-mix(in oklab, var(--retypeset-secondary) 22%, transparent);
+    background-color: color-mix(in oklab, var(--retypeset-surface-tint) 10%, transparent);
+    color: var(--retypeset-primary);
+  }
+
+  .public-article--retypeset .plate-article-content :where(pre) {
+    border-color: color-mix(in oklab, var(--retypeset-secondary) 22%, transparent);
+    background-color: color-mix(in oklab, var(--retypeset-surface-tint) 14%, transparent);
+  }
+
+  .public-article--retypeset .plate-article-content :where(hr) {
+    border-color: color-mix(in oklab, var(--retypeset-secondary) 22%, transparent);
+  }
+
+  .public-article--retypeset .plate-article-content :where(h1, h2, h3, h4, h5, h6):target {
+    --tw-ring-color: color-mix(in oklab, var(--retypeset-accent) 50%, transparent);
+    --tw-ring-offset-color: var(--retypeset-background);
+  }
+
+  @keyframes skeleton-pulse {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 0.85; }
+  }
+
+  .public-article .heti {
+    @apply break-words leading-normal text-foreground/90;
+  }
+
+  .public-article .heti :where(h1, h2, h3, h4, h5, h6) {
+    margin-top: 1.5em;
+    margin-bottom: 1rem;
+    scroll-margin-top: var(--public-article-scroll-offset);
+    @apply font-semibold;
+  }
+
+  .public-article .heti :where(h1, h2, h3, h4, h5, h6):target {
+    @apply rounded-lg ring-1 ring-primary/20 ring-offset-4 ring-offset-background;
+  }
+
+  .public-article .md-typography :where(h1, h2, h3, h4, h5, h6) {
+    scroll-margin-top: var(--public-article-scroll-offset);
+  }
+
+  .public-article .md-typography :where(h1, h2, h3, h4, h5, h6):target {
+    @apply rounded-lg ring-1 ring-primary/20 ring-offset-4 ring-offset-background;
+  }
+
+  .public-article .heti :where(h1, h2, h3) {
+    @apply text-balance leading-[1.33em];
+  }
+
+  .public-article .heti :where(h1) {
+    @apply text-3xl text-primary;
+  }
+
+  .public-article .heti :where(h2) {
+    @apply text-2xl text-primary;
+  }
+
+  .public-article .heti :where(h3) {
+    @apply text-xl;
+  }
+
+  .public-article .heti :where(h4) {
+    @apply text-lg;
+  }
+
+  .public-article .heti :where(h5) {
+    @apply text-base;
+  }
+
+  .public-article .heti :where(h6) {
+    @apply text-sm font-normal;
+  }
+
+  .public-article .heti :where(p) {
+    @apply mb-4 text-pretty;
+  }
+
+  .public-article .heti :where(a) {
+    @apply font-semibold underline decoration-muted-foreground/60 underline-offset-2 transition-colors hover:text-primary hover:decoration-primary/70;
+  }
+
+  .public-article .heti :where(img) {
+    @apply mx-auto my-6 max-w-full cursor-zoom-in rounded-xl border shadow-sm;
+  }
+
+  .public-article .heti :where(pre) {
+    @apply my-6 overflow-auto rounded-xl border bg-muted/40 px-4 py-3;
+  }
+
+  .public-article .heti :where(code) {
+    @apply rounded border border-border/60 bg-muted/35 px-1.5 py-0.5 font-mono text-[0.85em];
+  }
+
+  .public-article .heti pre code {
+    @apply border-0 bg-transparent p-0;
+  }
+
+  .public-article .heti :where(blockquote) {
+    @apply my-6 border-l-4 border-muted-foreground/20 px-4 py-1 text-muted-foreground;
+  }
+
+  .public-article .heti :where(table) {
+    @apply my-6 block max-w-full overflow-x-auto;
+  }
+
+  .public-article .heti :where(th, td) {
+    @apply border-b border-border/60 px-3 pb-2;
+  }
+
+  .public-article .heti :where(ul, ol) {
+    @apply my-6 pl-8;
+  }
+
+  .public-article .heti :where(ul) {
+    @apply list-disc;
+  }
+
+  .public-article .heti :where(ol) {
+    @apply list-decimal;
+  }
+
+  .public-article .heti :where(li) {
+    @apply mt-1;
+  }
+
+  .public-article .heti :where(hr) {
+    @apply my-10 border-border/60;
+  }
+
+  /* 公开文章对通用悬浮目录的主题与位置适配。 */
+
+  .public-article--retypeset .ftoc {
+    right: max(5rem, calc(50vw - 35rem));
+    left: auto;
+    top: 12rem;
+    z-index: 25;
+    width: 2.875rem;
+    max-height: min(36vh, 17.5rem);
+    padding-block: 10px;
+  }
+
+  .public-article--retypeset .ftoc:is(:hover, :focus-within) {
+    width: 13rem;
+    border-color: color-mix(in oklab, var(--retypeset-secondary) 20%, transparent);
+    box-shadow: 0 14px 36px color-mix(in oklab, var(--retypeset-primary) 18%, transparent);
+    background: color-mix(in oklab, var(--retypeset-surface-tint) 10%, transparent);
+  }
+
+  :is(.dark, [data-theme="dark"]) .public-article--retypeset .ftoc:is(:hover, :focus-within) {
+    border-color: rgb(255 255 255 / 0.16);
+    box-shadow: 0 14px 36px rgb(0 24 90 / 0.22);
+    background: rgb(255 255 255 / 0.12);
+  }
+
+  .public-article--retypeset .ftoc-line {
+    background: color-mix(in oklab, var(--retypeset-secondary) 42%, transparent);
+  }
+
+  .public-article--retypeset .ftoc-item:hover .ftoc-line {
+    background: color-mix(in oklab, var(--retypeset-primary) 75%, transparent);
+  }
+
+  .public-article--retypeset .ftoc-item.is-active .ftoc-line {
+    background: var(--retypeset-primary);
+  }
+
+  .public-article--retypeset .ftoc-text {
+    color: color-mix(in oklab, var(--retypeset-secondary) 70%, transparent);
+    letter-spacing: 0;
+  }
+
+  .public-article--retypeset .ftoc:is(:hover, :focus-within) .ftoc-item[data-level="2"] .ftoc-text,
+  .public-article--retypeset .ftoc:is(:hover, :focus-within) .ftoc-item:hover .ftoc-text {
+    color: var(--retypeset-primary);
+  }
+
+  .public-article--retypeset .ftoc:is(:hover, :focus-within) .ftoc-item[data-level="3"] .ftoc-text {
+    color: color-mix(in oklab, var(--retypeset-secondary) 90%, transparent);
+  }
+
+  .public-article--retypeset .ftoc:is(:hover, :focus-within) .ftoc-item[data-level="4"] .ftoc-text {
+    color: color-mix(in oklab, var(--retypeset-secondary) 70%, transparent);
+  }
+
+  .public-article--retypeset .ftoc-item.is-active .ftoc-text,
+  :is(.dark, [data-theme="dark"]) .public-article--retypeset .ftoc-item.is-active .ftoc-text {
+    color: var(--retypeset-primary);
+  }
+
+  .public-article--retypeset .ftoc:is(:hover, :focus-within) .ftoc-item.is-active,
+  :is(.dark, [data-theme="dark"]) .public-article--retypeset .ftoc:is(:hover, :focus-within) .ftoc-item.is-active,
+  .public-article--retypeset .ftoc:is(:hover, :focus-within) .ftoc-item:hover,
+  :is(.dark, [data-theme="dark"]) .public-article--retypeset .ftoc:is(:hover, :focus-within) .ftoc-item:hover {
+    background: color-mix(in oklab, var(--retypeset-surface-tint) 10%, transparent);
+  }
+
+  .public-article--retypeset .ftoc:is(:hover, :focus-within) .ftoc-item.is-active::before,
+  :is(.dark, [data-theme="dark"]) .public-article--retypeset .ftoc:is(:hover, :focus-within) .ftoc-item.is-active::before {
+    background: var(--retypeset-primary);
+  }
+
+  /* ── Heading anchor ── */
+
+  .heading-anchor-link {
+    @apply inline-block translate-y-[0.1em] no-underline;
+  }
+
+  .heading-anchor-link svg {
+    @apply ml-2 aspect-square w-[0.9em] opacity-0 transition-opacity active:scale-90;
+  }
+
+  .public-article :is(h1, h2, h3, h4):hover .heading-anchor-link svg {
+    @apply opacity-40;
+  }
+
+  .public-article :is(h1, h2, h3, h4) .heading-anchor-link svg:hover {
+    @apply opacity-80;
+  }
+
+
+}

@@ -1,0 +1,39 @@
+import type { MindElixirData } from "mind-elixir"
+import type { TocItem } from "@/lib/markdown-toc"
+export { buildToc, type TocItem } from "@/lib/markdown-toc"
+
+export { scrollToHeading } from "@/components/floating-toc/toc"
+
+export function buildFallbackMindmapData(title: string, toc: TocItem[]): MindElixirData {
+  type TreeNode = { topic: string; root?: boolean; children?: TreeNode[] }
+  const root: TreeNode = { topic: title || "文章", root: true, children: [] }
+  const stack: Array<{ level: number; node: TreeNode }> = [{ level: 0, node: root }]
+
+  for (const item of toc) {
+    const node: TreeNode = { topic: item.text, children: [] }
+    while (stack.length > 1 && (stack.at(-1)?.level ?? 0) >= item.level) {
+      stack.pop()
+    }
+    stack.at(-1)?.node.children?.push(node)
+    stack.push({ level: item.level, node })
+  }
+
+  return { nodeData: root } as MindElixirData
+}
+
+export function safeOrigin(): string {
+  if (typeof window === "undefined") return ""
+  return window.location.origin
+}
+
+// 从 Markdown 正文中提取第一张图片的 URL
+export function extractFirstImageUrl(contentMd: string): string | null {
+  if (!contentMd) return null
+  // 匹配标准 Markdown 图片：![alt](url) 或 ![alt](url "title")
+  const mdMatch = contentMd.match(/!\[[^\]]*\]\(([^)\s"]+)/)
+  if (mdMatch?.[1]) return mdMatch[1]
+  // 匹配内联 HTML：<img src="url">
+  const htmlMatch = contentMd.match(/<img[^>]+src=["']([^"']+)["']/)
+  if (htmlMatch?.[1]) return htmlMatch[1]
+  return null
+}

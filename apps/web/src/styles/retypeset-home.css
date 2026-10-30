@@ -1,0 +1,456 @@
+/*
+ * Retypeset 前台样式。
+ * 白天采用 Kami 的暖纸色、墨色与墨蓝；夜间保留现有炭黑纸面。
+ * 配色参考：https://kami.tw93.fun/index-zh.html（仅采用色板）。
+ * 容器内还接管了原蓝色像素风遗留的写死颜色类（见文件末尾兼容层）。
+ */
+
+:root {
+  --retypeset-primary: #141413;
+  --retypeset-secondary: #504e49;
+  --retypeset-background: #f5f4ed;
+  /* 实心表面与混色基色分开，避免 hover 直接铺满深色墨灰。 */
+  --retypeset-surface: #e8e6dc;
+  --retypeset-surface-tint: #504e49;
+  --retypeset-accent: #1b365d;
+  --retypeset-highlight: rgb(27 54 93 / 0.14);
+}
+
+.dark {
+  /* 与 .dark 的 --foreground 一致：标题与强调文字 */
+  --retypeset-primary: oklch(0.985 0 0);
+  /* 与 .dark 的 --muted-foreground 一致：正文 */
+  --retypeset-secondary: oklch(0.708 0 0);
+  /* 与 .dark 的 --background 一致：后台右侧内容区同款底色 */
+  --retypeset-background: oklch(0.145 0 0);
+  /* 与 .dark 的 --card 一致：浮起的卡片面 */
+  --retypeset-surface: oklch(0.205 0 0);
+  --retypeset-surface-tint: oklch(0.205 0 0);
+  /* 强调色对齐后台的 --brand（暗色档）。
+     原 sakura 玫红在近黑底上偏艳、且低透明度会糊成暗红块，观感不佳。
+     徽标底、标记笔下划线、链接 hover 全部派生自这两个变量。 */
+  --retypeset-accent: oklch(0.707 0.165 254.624);
+  --retypeset-highlight: oklch(0.707 0.165 254.624 / 0.3);
+}
+
+.retypeset-home {
+  background-color: var(--retypeset-background);
+  color: var(--retypeset-secondary);
+  font-family: var(--font-luo);
+  text-autospace: normal;
+  transition: background-color 280ms ease, color 280ms ease;
+}
+
+
+.retypeset-home ::selection {
+  background-color: var(--retypeset-highlight);
+  color: var(--retypeset-primary);
+}
+
+.retypeset-home a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.retypeset-home .retypeset-c-primary {
+  color: var(--retypeset-primary);
+}
+
+.retypeset-home .retypeset-c-secondary {
+  color: var(--retypeset-secondary);
+}
+
+.retypeset-home .retypeset-font-title,
+.retypeset-home .retypeset-font-navbar,
+.retypeset-home .retypeset-font-time,
+.retypeset-home .retypeset-font-serif {
+  font-family: var(--font-luo);
+}
+
+.retypeset-home .retypeset-highlight-static,
+.retypeset-home .retypeset-highlight-hover {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+}
+
+.retypeset-home .retypeset-highlight-static::after,
+.retypeset-home .retypeset-highlight-hover::after {
+  position: absolute;
+  bottom: 0.7em;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 0.5em;
+  background-color: var(--retypeset-highlight);
+  content: "";
+}
+
+.retypeset-home .retypeset-footer-link::after {
+  bottom: 0.35em;
+}
+
+.retypeset-home .retypeset-highlight-static::after,
+.retypeset-home .retypeset-highlight-hover:hover::after,
+.retypeset-home .retypeset-highlight-hover:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+.retypeset-home .retypeset-highlight-hover::after {
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 300ms ease-out;
+}
+
+.retypeset-home .retypeset-decorative-line {
+  width: 2.5rem;
+  height: 1px;
+  margin-bottom: 1.125rem;
+  background-color: color-mix(in oklab, var(--retypeset-secondary) 25%, transparent);
+}
+
+@media (min-width: 1024px) {
+  .retypeset-home .retypeset-decorative-line {
+    width: 2.75rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.retypeset-home .retypeset-post-heading {
+  transition: color 180ms ease-out;
+}
+
+.retypeset-home .retypeset-post-heading:hover {
+  color: var(--retypeset-accent);
+}
+
+/* 状态徽标：借用 Astryx Badge 的几何（inline-flex 居中、定高、小圆角），
+   但配色全部由 --retypeset-accent 派生，跟站点强调色联动——写死 hex 的话
+   以后换强调色徽标不会跟着走。这是列表里的次要元数据，饱和度压低，
+   不与标题争视线。 */
+.retypeset-home .retypeset-status-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.15rem;
+  padding-block: 0;
+  padding-inline: 0.4rem;
+  border: 1px solid color-mix(in oklab, var(--retypeset-accent) 28%, transparent);
+  border-radius: 0.3rem;
+  background-color: color-mix(in oklab, var(--retypeset-accent) 11%, transparent);
+  color: color-mix(in oklab, var(--retypeset-accent) 88%, var(--retypeset-primary));
+  font-family: var(--font-luo);
+  font-size: 0.62rem;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.retypeset-home .retypeset-lock-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  color: var(--retypeset-secondary);
+  border-radius: 9999px;
+  transition: color 180ms ease-out;
+}
+
+.retypeset-home .retypeset-lock-tag:hover {
+  color: var(--retypeset-accent);
+}
+
+/* ── Retypeset 标签：纯文本 + 选中态高亮 ── */
+
+.retypeset-home .retypeset-tag-pill {
+  display: inline-block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--retypeset-secondary);
+  font: inherit;
+  font-size: 1.05rem;
+  line-height: 2em;
+  cursor: pointer;
+  transition: color 200ms ease-out;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.retypeset-home .retypeset-tag-pill:hover,
+.retypeset-home .retypeset-tag-pill[aria-pressed="true"] {
+  color: var(--retypeset-primary);
+}
+
+.retypeset-home .retypeset-tag-pill-name {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+}
+
+.retypeset-home .retypeset-tag-pill:hover .retypeset-tag-pill-name,
+.retypeset-home .retypeset-tag-pill:focus-visible .retypeset-tag-pill-name,
+.retypeset-home .retypeset-tag-pill[aria-pressed="true"] .retypeset-tag-pill-name {
+  font-weight: 400;
+}
+
+/* 选中态：荧光笔高亮，覆盖字符下半部
+   line-height 2em 时字符垂直居中（约 0.5em ~ 1.5em from bottom），
+   故色块 bottom 0.55em + height 0.45em → 覆盖字符 0.05~0.5em 段（下半部） */
+.retypeset-home .retypeset-tag-pill[aria-pressed="true"] .retypeset-tag-pill-name::after {
+  content: "";
+  position: absolute;
+  left: -0.12em;
+  right: -0.12em;
+  bottom: 0.55em;
+  height: 0.45em;
+  background-color: var(--retypeset-highlight);
+  z-index: -1;
+}
+
+.retypeset-home .retypeset-tag-pill:focus-visible {
+  outline: none;
+}
+
+/* ============================================================
+ * 兼容层：原蓝色像素风遗留的写死类，统一被主题变量接管
+ * 仅在 .retypeset-home 容器内生效，避免污染后台/全站
+ * ============================================================ */
+
+.retypeset-home .bg-\[\#0044cc\],
+.retypeset-home .bg-\[\#0044cc\]\/95,
+.retypeset-home .bg-\[\#0044cc\]\/90 {
+  background-color: var(--retypeset-background) !important;
+}
+
+.retypeset-home .bg-blue-950\/55 {
+  background-color: color-mix(in oklab, var(--retypeset-background) 65%, transparent) !important;
+}
+
+.retypeset-home .text-white {
+  color: var(--retypeset-primary) !important;
+}
+
+.retypeset-home .text-white\/25,
+.retypeset-home .text-white\/30,
+.retypeset-home .text-white\/35,
+.retypeset-home .text-white\/40,
+.retypeset-home .text-white\/45,
+.retypeset-home .text-white\/50,
+.retypeset-home .text-white\/55,
+.retypeset-home .text-white\/60,
+.retypeset-home .text-white\/65,
+.retypeset-home .text-white\/70,
+.retypeset-home .text-white\/75,
+.retypeset-home .text-white\/80,
+.retypeset-home .text-white\/85,
+.retypeset-home .text-white\/90,
+.retypeset-home .text-white\/95 {
+  color: var(--retypeset-secondary) !important;
+}
+
+.retypeset-home .border-white\/10,
+.retypeset-home .border-white\/25 {
+  border-color: color-mix(in oklab, var(--retypeset-secondary) 18%, transparent) !important;
+}
+
+.retypeset-home .bg-yellow-300,
+.retypeset-home .hover\:bg-yellow-300:hover {
+  background-color: var(--retypeset-accent) !important;
+}
+
+.retypeset-home .bg-yellow-300\/5 {
+  background-color: color-mix(in oklab, var(--retypeset-accent) 8%, transparent) !important;
+}
+
+.retypeset-home .bg-yellow-200 {
+  background-color: var(--retypeset-accent) !important;
+}
+
+/* text-blue-950 原本是反相按钮的"深字"，浅色主题下保持深字，深色主题下退化为背景色（亮） */
+.retypeset-home .text-blue-950,
+.retypeset-home .hover\:text-blue-950:hover {
+  color: var(--retypeset-primary) !important;
+}
+
+/* Tabs / 切换按钮的 active 高亮：用主题 highlight 作为背景，primary 作为文字 */
+.retypeset-home .data-\[state\=active\]\:bg-yellow-300[data-state="active"] {
+  background-color: var(--retypeset-highlight) !important;
+}
+
+.retypeset-home .data-\[state\=active\]\:text-blue-950[data-state="active"] {
+  color: var(--retypeset-primary) !important;
+}
+
+/* 按钮 hover 上的黄色衍生 */
+.retypeset-home .hover\:bg-yellow-300\/15:hover,
+.retypeset-home .hover\:bg-yellow-300\/20:hover,
+.retypeset-home .hover\:bg-yellow-300\/25:hover {
+  background-color: color-mix(in oklab, var(--retypeset-highlight) 75%, transparent) !important;
+}
+
+.retypeset-home .hover\:border-yellow-300\/50:hover,
+.retypeset-home .hover\:border-yellow-300\/40:hover {
+  border-color: color-mix(in oklab, var(--retypeset-accent) 55%, transparent) !important;
+}
+
+.retypeset-home .hover\:bg-white:hover {
+  background-color: var(--retypeset-primary) !important;
+}
+
+.retypeset-home .bg-white\/45,
+.retypeset-home .bg-white\/12,
+.retypeset-home .bg-white\/20,
+.retypeset-home .bg-white\/25 {
+  background-color: color-mix(in oklab, var(--retypeset-surface-tint) 14%, transparent) !important;
+}
+
+.retypeset-home .decoration-yellow-200\/35,
+.retypeset-home .decoration-yellow-300\/60,
+.retypeset-home .hover\:decoration-yellow-100\/70:hover,
+.retypeset-home .hover\:decoration-white\/80:hover {
+  text-decoration-color: color-mix(in oklab, var(--retypeset-accent) 60%, transparent) !important;
+}
+
+.retypeset-home .border-yellow-300\/60 {
+  border-color: color-mix(in oklab, var(--retypeset-accent) 65%, transparent) !important;
+}
+
+.retypeset-home .text-yellow-300,
+.retypeset-home .text-yellow-200,
+.retypeset-home .text-yellow-200\/80,
+.retypeset-home .text-yellow-100 {
+  color: var(--retypeset-accent) !important;
+}
+
+.retypeset-home .selection\:bg-yellow-300::selection {
+  background-color: var(--retypeset-highlight) !important;
+}
+
+.retypeset-home .selection\:text-blue-950::selection {
+  color: var(--retypeset-primary) !important;
+}
+
+.retypeset-home .bg-white,
+.retypeset-home .bg-white\/5,
+.retypeset-home .bg-white\/10,
+.retypeset-home .bg-white\/\[0\.08\] {
+  background-color: color-mix(in oklab, var(--retypeset-surface-tint) 8%, transparent) !important;
+}
+
+.retypeset-home .border-white\/15,
+.retypeset-home .border-white\/20 {
+  border-color: color-mix(in oklab, var(--retypeset-secondary) 22%, transparent) !important;
+}
+
+.retypeset-home .ring-yellow-300,
+.retypeset-home .ring-yellow-300\/40,
+.retypeset-home .ring-yellow-300\/70 {
+  --tw-ring-color: color-mix(in oklab, var(--retypeset-accent) 60%, transparent) !important;
+}
+
+.retypeset-home .ring-offset-\[\#0044cc\] {
+  --tw-ring-offset-color: var(--retypeset-background) !important;
+}
+
+.retypeset-home .hover\:border-yellow-300\/70:hover,
+.retypeset-home .data-\[active\=true\]\:border-yellow-300[data-active="true"] {
+  border-color: var(--retypeset-accent) !important;
+}
+
+.retypeset-home .hover\:text-yellow-300:hover,
+.retypeset-home .hover\:text-yellow-100:hover {
+  color: var(--retypeset-accent) !important;
+}
+
+.retypeset-home .text-slate-950 {
+  color: var(--retypeset-primary) !important;
+}
+
+/* 像素装饰背景网格：retypeset 风格不需要，隐藏 */
+.retypeset-home .blog-home-grid {
+  display: none !important;
+}
+
+/* 首页底部下划线类（blog-home-link）原色 #fde047 替换为主题 accent */
+.retypeset-home .blog-home-link::after {
+  background: var(--retypeset-accent) !important;
+}
+
+/* LobeHub Markdown 表格的"复制表格"按钮（.table-copy-button）默认是 antd
+   colorBgContainer 白底 + 描边，在 retypeset 主题（尤其浅粉 sakura）上像一块
+   突兀的白方块。这里让它融入主题：半透明 surface-tint 底 + 主题描边 + secondary
+   图标色，hover 略加深，与卡片的 bg-white/5 + border-white/10 风格保持一致。 */
+.retypeset-home .table-copy-button,
+.retypeset-home .table-copy-button svg {
+  color: var(--retypeset-secondary) !important;
+}
+
+.retypeset-home .table-copy-button {
+  background: color-mix(in oklab, var(--retypeset-surface-tint) 8%, transparent) !important;
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--retypeset-secondary) 18%, transparent) !important;
+}
+
+.retypeset-home .table-copy-button:hover {
+  background: color-mix(in oklab, var(--retypeset-surface-tint) 16%, transparent) !important;
+  color: var(--retypeset-primary) !important;
+}
+
+.public-wiki :is(a, button):focus-visible {
+  outline: 2px solid var(--retypeset-secondary);
+  outline-offset: 3px;
+}
+
+.public-wiki .wiki-search input:focus,
+.public-wiki .wiki-search input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 分类选中态覆盖前台兼容样式，保持文字与背景对比。 */
+.public-wiki .wiki-kind-pill {
+  border: 1px solid color-mix(in srgb, var(--retypeset-secondary) 18%, transparent);
+  background-color: color-mix(in srgb, var(--retypeset-primary) 3%, transparent);
+  color: var(--retypeset-secondary);
+  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+.public-wiki .wiki-kind-pill:hover {
+  border-color: color-mix(in srgb, var(--retypeset-secondary) 30%, transparent);
+  background-color: color-mix(in srgb, var(--retypeset-primary) 7%, transparent);
+  color: var(--retypeset-primary);
+}
+
+.public-wiki .wiki-kind-pill[data-active="true"] {
+  border-color: color-mix(in srgb, var(--retypeset-accent) 50%, transparent) !important;
+  background-color: var(--retypeset-highlight) !important;
+  color: var(--retypeset-primary) !important;
+  font-weight: 400;
+  box-shadow: none !important;
+}
+
+.public-wiki .wiki-kind-pill[data-active="true"] svg {
+  color: var(--retypeset-primary) !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 1023px) {
+  .public-wiki [data-public-site-navigation] {
+    margin-bottom: 0;
+  }
+
+  .retypeset-home [data-public-site-navigation] nav > ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-wiki *,
+  .public-wiki *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,35 @@
+# 用法：复制 .env.example 为 .env 并填写 SITE_DOMAIN 等配置，然后 docker compose up -d
+# 首次启动后执行 docker compose logs publish 查看发布密钥。
+services:
+  publish:
+    build: .
+    image: sylva-publish:local
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # 只经由 Caddy 访问，信任其转发的客户端地址
+      TRUST_PROXY: "true"
+    volumes:
+      - publish-data:/data
+    expose:
+      - "8080"
+
+  caddy:
+    image: caddy:2.10.2
+    restart: unless-stopped
+    depends_on:
+      - publish
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:?请在 .env 中设置 SITE_DOMAIN}
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  publish-data:
+  caddy-data:
+  caddy-config:

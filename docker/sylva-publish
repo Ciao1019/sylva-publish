@@ -1,0 +1,3 @@
+#!/bin/sh
+# 容器内运维命令：docker exec <容器> sylva-publish key rotate
+exec bun /app/server/src/cli.ts "$@"

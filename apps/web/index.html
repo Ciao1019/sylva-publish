@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN" data-retypeset-theme="sakura">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="description" content="由 Sylva 发布的文章" />
+    <title>Sylva</title>
+    <link rel="icon" href="/sidebar-logo.jpg" type="image/jpeg" />
+    <script>
+      ;(() => {
+        try {
+          document.documentElement.toggleAttribute("data-public-site", true)
+          let theme = "system"
+          try {
+            const storedTheme = localStorage.getItem("ui-theme")
+            if (["light", "dark", "system"].includes(storedTheme)) theme = storedTheme
+          } catch {}
+          if (theme === "system") {
+            theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+          }
+          document.documentElement.classList.add(theme)
+          document.documentElement.style.colorScheme = theme
+        } catch {}
+      })()
+    </script>
+    <!-- SYLVA_SITE_CONFIG -->
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "sylva-publish",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "packageManager": "bun@1.3.14",
+  "scripts": {
+    "install:all": "bun install --cwd apps/web && bun install --cwd apps/server",
+    "dev:web": "bun run --cwd apps/web dev",
+    "dev:server": "PORT=8080 HOST=127.0.0.1 bun run --cwd apps/server dev",
+    "build": "bun run --cwd apps/web build",
+    "start": "bun run --cwd apps/server start",
+    "test": "bun run --cwd apps/web test && bun run --cwd apps/server test",
+    "typecheck": "bun run --cwd apps/web typecheck && bun run --cwd apps/server typecheck",
+    "lint": "bun run --cwd apps/web lint"
+  },
+  "engines": {
+    "bun": ">=1.3.14"
+  }
+}

@@ -1,0 +1,179 @@
+"use client"
+
+import * as React from "react"
+import { Github } from "@/components/iconimate"
+import { Link } from "react-router-dom"
+
+import { BlogSearchDialog, useBlogSearchHotkey } from "@/components/blog-search-dialog"
+import { PublicSiteAuthor } from "@/components/public-site-author"
+import { PublicSiteFooter } from "@/components/public-site-footer"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { StaticNoise } from "@/cuicui/other/creative-effects/animated-noise/static-noise"
+import { getPublicSiteConfig } from "@/lib/api"
+import { cn } from "@/lib/utils"
+
+export type RetypesetSiteActiveSection = "articles" | "about"
+type RetypesetSiteNavSection = RetypesetSiteActiveSection
+type RetypesetSiteNavItem = {
+    section: RetypesetSiteNavSection
+    href: string
+    label: string
+    internal?: boolean
+}
+
+let retypesetScrollbarMounts = 0
+
+const RETYPESET_SCROLLBAR_HIDDEN_CLASS = "retypeset-scrollbar-hidden"
+const retypesetSiteCopy = {
+    navLabel: "站点导航",
+    navPosts: "文章",
+    navAbout: "关于",
+    githubTrigger: "GitHub 仓库",
+} as const
+
+const retypesetSiteNavItems: RetypesetSiteNavItem[] = [
+    { section: "articles", href: "/#articles", label: retypesetSiteCopy.navPosts, internal: true },
+    { section: "about", href: "/about", label: retypesetSiteCopy.navAbout, internal: true },
+] as const
+
+function getDockVisibilityClass(dockVisible: boolean) {
+    return dockVisible ? "lg:opacity-100" : "lg:pointer-events-none lg:opacity-0"
+}
+
+function getChromeLinkClassName(active: boolean) {
+    return active
+        ? "retypeset-highlight-static retypeset-c-primary font-bold"
+        : "retypeset-highlight-hover transition-colors hover:font-bold"
+}
+
+function useRetypesetScrollbarVisibility() {
+    React.useLayoutEffect(() => {
+        const root = document.documentElement
+        const body = document.body
+        retypesetScrollbarMounts += 1
+        root.classList.add(RETYPESET_SCROLLBAR_HIDDEN_CLASS)
+        body.classList.add(RETYPESET_SCROLLBAR_HIDDEN_CLASS)
+
+        return () => {
+            retypesetScrollbarMounts = Math.max(0, retypesetScrollbarMounts - 1)
+
+            if (retypesetScrollbarMounts === 0) {
+                root.classList.remove(RETYPESET_SCROLLBAR_HIDDEN_CLASS)
+                body.classList.remove(RETYPESET_SCROLLBAR_HIDDEN_CLASS)
+            }
+        }
+    }, [])
+}
+
+export function RetypesetSiteHeader({ dockVisible }: { dockVisible: boolean }) {
+    useRetypesetScrollbarVisibility()
+    const site = getPublicSiteConfig()
+    const dockVisibilityClass = getDockVisibilityClass(dockVisible)
+
+    return (
+        <div className="retypeset-home contents">
+            {/* 复用后台噪点，前台以 fixed 铺满页面；浅色模式降低强度，保留纸张质感。 */}
+            <StaticNoise opacity={0.08} className="retypeset-paper-noise fixed" />
+
+            <header
+                className={`${dockVisibilityClass} retypeset-c-secondary mb-[2.625rem] transition-opacity duration-150 lg:fixed lg:right-[max(5rem,calc(50vw-35rem))] lg:top-20 lg:z-30 lg:mb-0 lg:w-56`}
+            >
+                <h1 className="retypeset-font-title retypeset-c-primary mb-[0.45rem] w-3/4 text-[2rem] font-bold leading-none lg:w-full lg:text-4xl">
+                    <span className="box-content inline-block pr-1">
+                        <Link id="site-title-link" to="/#articles">
+                            {site.title}
+                        </Link>
+                    </span>
+                </h1>
+                <h2 className="retypeset-font-navbar w-3/4 text-sm leading-snug lg:w-full lg:text-base">
+                    {site.subtitle}
+                </h2>
+            </header>
+        </div>
+    )
+}
+
+export function RetypesetSiteNav({
+    activeSection,
+    dockVisible,
+}: {
+    activeSection: RetypesetSiteActiveSection
+    dockVisible: boolean
+}) {
+    const dockVisibilityClass = getDockVisibilityClass(dockVisible)
+    const { githubUrl } = getPublicSiteConfig()
+    const [searchOpen, setSearchOpen] = React.useState(false)
+    const openSearch = React.useCallback(() => setSearchOpen(true), [])
+    useBlogSearchHotkey(openSearch)
+
+    return (
+        <div className="retypeset-home contents">
+            <div className="mb-[2.625rem] lg:contents" data-public-site-navigation>
+                <nav
+                    aria-label={retypesetSiteCopy.navLabel}
+                    className={`${dockVisibilityClass} retypeset-font-navbar text-[0.9rem] font-semibold leading-[2.45em] transition-opacity duration-150 lg:fixed lg:right-[max(5rem,calc(50vw-35rem))] lg:bottom-[min(calc(9.04rem+3.85vw),12.5rem)] lg:z-30 lg:w-56 lg:text-base`}
+                >
+                    <ul>
+                        {retypesetSiteNavItems.map((item) => {
+                            const active = item.section === activeSection
+                            const className = getChromeLinkClassName(active)
+
+                            return (
+                                <li key={item.href}>
+                                    {item.internal ? (
+                                        <Link className={className} to={item.href} aria-current={active ? "page" : undefined}>
+                                            {item.label}
+                                        </Link>
+                                    ) : (
+                                        <a className={className} href={item.href}>
+                                            {item.label}
+                                        </a>
+                                    )}
+                                </li>
+                            )
+                        })}
+                    </ul>
+                    <div className="mt-3 flex items-center gap-3 lg:mt-4">
+                        <ThemeToggle className="size-10 [--theme-toggle-cutout:var(--retypeset-background)] lg:size-7" />
+                        {githubUrl ? (
+                            <a
+                                href={githubUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={retypesetSiteCopy.githubTrigger}
+                                title={retypesetSiteCopy.githubTrigger}
+                                className="retypeset-c-secondary inline-flex size-10 cursor-pointer items-center justify-center rounded-full lg:size-7"
+                            >
+                                <Github className="size-4" aria-hidden="true" />
+                                <span className="sr-only">{retypesetSiteCopy.githubTrigger}</span>
+                            </a>
+                        ) : null}
+                    </div>
+                    <div className="mt-4 w-56 max-w-full lg:absolute lg:left-0 lg:top-full" data-public-site-author>
+                        <PublicSiteAuthor />
+                    </div>
+                </nav>
+            </div>
+            <BlogSearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
+        </div>
+    )
+}
+
+/** 放在页面内容之后：手机端随文档流显示，桌面端固定在侧栏底部。 */
+export function RetypesetSiteFooter({
+    dockVisible = true,
+    className,
+}: {
+    dockVisible?: boolean
+    className?: string
+}) {
+    return (
+        <PublicSiteFooter
+            className={cn(
+                getDockVisibilityClass(dockVisible),
+                "mx-auto mt-auto max-w-[51.462rem] shrink-0 px-[min(7.25vw,3.731rem)] pb-10 transition-opacity duration-150 lg:fixed lg:right-[max(5rem,calc(50vw-35rem))] lg:bottom-20 lg:z-30 lg:m-0 lg:w-56 lg:p-0",
+                className,
+            )}
+        />
+    )
+}

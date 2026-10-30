@@ -1,0 +1,139 @@
+/*
+ * Desk accents —— 移植自 Sn0w（https://github.com/lin-snow）首页的"手绘桌面"注记体系，
+ * 用在前台「关于我」页：手绘波浪下划线（红/绿/蓝）、悬停浮起的手写注记气泡、
+ * 荧光笔涂抹、以及蓝色虚线框便签（图钉 + 邮票齿边）。
+ *
+ * 这些 class / 变量都带 `desk-` 前缀，只服务于 About / 开源项目页，互不污染全站。
+ *
+ * 白天使用暖纸与深墨，夜间翻转承载面与墨色；马克笔保留原有语义色。
+ */
+
+:root {
+  --desk-marker-red: #b55042;
+  --desk-marker-orange: #a86c2e;
+  --desk-marker-green: #477c55;
+  --desk-marker-teal: #3b7971;
+  --desk-marker-blue: #345780;
+  --desk-marker-purple: #73568e;
+  --desk-marker-pink: #a65380;
+  --desk-note-bg: #e6eaf0;
+  --desk-note-ink: #1b365d;
+  --desk-sticky: #eee4b7;
+  --desk-sticky-ink: #5d4d28;
+  --desk-paper: #faf9f5;
+  --desk-stamp: #86754b;
+  --desk-sheet: #faf9f5;
+  --desk-sheet-ink: #141413;
+  --desk-sheet-soft: #504e49;
+  --desk-sheet-muted: #6b6a64;
+  --desk-sheet-hair: #e5e3d8;
+}
+
+.dark {
+  /* 马克笔色板 —— 保持红/绿/蓝等语义可辨识，整体提亮以在暗底上拉开对比 */
+  --desk-marker-red: #f0806e;
+  --desk-marker-orange: #f0a95f;
+  --desk-marker-green: #6fc48c;
+  --desk-marker-teal: #4fc4b4;
+  --desk-marker-blue: #7d99e0;
+  --desk-marker-purple: #a68ce0;
+  --desk-marker-pink: #ec7cba;
+
+  /* 蓝色边注便签：暗底 + 浅墨 */
+  --desk-note-bg: oklch(0.28 0.045 260);
+  --desk-note-ink: #b9cbf2;
+
+  /* 荧光笔涂抹色 + 其墨色：暗底下用低亮度暖色块，墨色转浅 */
+  --desk-sticky: oklch(0.34 0.07 95);
+  --desk-sticky-ink: #f0e6a8;
+
+  /* 注记气泡的"纸"底色：比页面背景略亮一档，拉开层次（对齐 --card） */
+  --desk-paper: oklch(0.225 0 0);
+  --desk-stamp: #cbbf86;
+
+  /* 开源项目「纸面」清单：同样转为暗色承载面 */
+  --desk-sheet: oklch(0.205 0 0);
+  --desk-sheet-ink: oklch(0.985 0 0);
+  --desk-sheet-soft: oklch(0.78 0 0);
+  --desk-sheet-muted: oklch(0.65 0 0);
+  --desk-sheet-hair: oklch(1 0 0 / 12%);
+}
+
+/* 波浪下划线自描边动画：dash 远长于路径，靠 dashoffset 由隐到显地"画"出来 */
+@keyframes desk-scribble {
+  from {
+    stroke-dashoffset: 320;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* 始终保留 dash，使重描有可绘制的底；默认 offset 0 时即整条已上墨。 */
+.desk-retrace {
+  stroke-dasharray: 320;
+}
+
+/* 蓝色边注便签底色 */
+.desk-note {
+  background: var(--desk-note-bg);
+  color: var(--desk-note-ink);
+}
+
+/* ——— 开源项目清单（Sn0w projects 区原语） ——— */
+
+/* 黄色手撕便签：年份标签 */
+.desk-sticky-note {
+  background: var(--desk-sticky);
+  color: var(--desk-sticky-ink);
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.04),
+    0 6px 14px -8px rgba(91, 80, 20, 0.45);
+}
+
+/* 上下细线夹住的「打字便条」：项目描述，不是卡片（无底色、无阴影） */
+.desk-framed-note {
+  border-top: 1px solid color-mix(in srgb, var(--desk-sheet-soft) 42%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--desk-sheet-soft) 42%, transparent);
+}
+
+/* 点击展开的折叠面板：0fr→1fr 网格行高动画到内容自然高度，内层裁剪 */
+.desk-fold {
+  display: grid;
+  grid-template-rows: 0fr;
+}
+.desk-fold.open {
+  grid-template-rows: 1fr;
+}
+.desk-fold > * {
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 首次随内容载入时把线"画"进来（略带延迟，等段落淡入后再起笔）。 */
+  .desk-scribble {
+    stroke-dasharray: 320;
+    animation: desk-scribble 0.9s 0.25s ease-out forwards;
+  }
+  /* 悬停时快速重描一遍（组件通过 React key 重挂载触发）。 */
+  .desk-retrace {
+    animation: desk-scribble 0.5s ease-out;
+  }
+
+  /* 折叠面板缓动展开，内容随之淡入下沉就位（而非点开瞬间整段画好）。 */
+  .desk-fold {
+    transition: grid-template-rows 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .desk-fold > * {
+    opacity: 0;
+    transform: translateY(-4px);
+    transition:
+      opacity 0.25s ease,
+      transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .desk-fold.open > * {
+    opacity: 1;
+    transform: none;
+  }
+}
